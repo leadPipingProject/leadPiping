@@ -26,6 +26,36 @@ UK_HPI = UK_HPI.loc[(UK_HPI['Date'] > '2018-03-01'),:]
 UK_HPI.head(20)
 # %% find the average price of each Region with 2018Code
 average_price = UK_HPI.groupby('CouncilArea2018Code').mean()
-average_price
+average_price.reset_index(inplace = True)
+average_price.head(20)
 
+# %% read in the file Other - Postcode_ household count_ urban class
+# to connect the street postecode from it with CouncilArea2018Code here.
+household_count = pd.read_csv("raw-data/Other - Postcode_ household count_ urban class.csv")
+household_count.head(20)
+
+# %% merge these two datasets by column CouncilArea2018Code
+new_frame = pd.merge(household_count, average_price, left_on = 'CouncilArea2018Code', right_on = 'CouncilArea2018Code', how = 'left')
+new_frame = new_frame[['Street postcode', 'AveragePrice']]
+new_frame = new_frame[['AveragePrice', 'Street postcode']].groupby('Street postcode').mean()
+new_frame.columns=['Average House Price for Street Postcode']
+new_frame
+
+# %% exploratory analysis
+mean_price_of_all = average_price['AveragePrice'].mean()
+#  254893.38524889827
+std_of_all = average_price['AveragePrice'].std()
+# 134495.95605388767
+max_price_of_all = average_price['AveragePrice'].max()
+# 1320226.3068333336
+min_price_of_all = average_price['AveragePrice'].min()
+# 81449.31328916666
+median_price_of_all = average_price['AveragePrice'].median()
+# 224883.2931166667
+bins = np.linspace(min_price_of_all, max_price_of_all, 20)
+plt.hist(average_price['AveragePrice'], bins)
+plt.xlabel('Number of house price in a range')
+plt.ylabel('Number of occurences')
+plt.title('Frequency distribution of house price in Scottish Water Region')
+plt.show()
 # %%
