@@ -1,11 +1,16 @@
 
-#%% import
+#%% import packages and data
+
+###############################################################
+# import packages and data
+###############################################################
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
 
-#%% load raw-data/SW - Scottish Water Zonal Phosphate Levels.xls
+# load raw-data/SW - Scottish Water Zonal Phosphate Levels.xls
 phosphate_level_N = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls",
                                   sheet_name="North", header=None, skiprows=[0, 1, 2, 3, 4])
 phosphate_level_S = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls",
@@ -26,11 +31,11 @@ del phosphate_level_W
 
 phosphate_level = phosphate_level.drop(columns=[8, 9])
 
+#%% convert data to a relational data
+
 ###############################################################
 # convert data to a relational data
 ###############################################################
-
-#%% utility functions: convert to relational_data
 
 def remove_empty_row(df: pd.DataFrame):
     # we delete all-empty rows
@@ -68,10 +73,10 @@ def to_relational(df: pd.DataFrame):
     return (rig_names, new_df.drop(to_drop))
 
 
-#%% remove empty rows
+# remove empty rows
 phosphate_level = remove_empty_row(phosphate_level)
 
-#%% save the headers here (will be removed from the table later)
+# save the headers here (will be removed from the table later)
 header = phosphate_level.iloc[1:3, :]
 new_header = ["rig_name"]
 
@@ -88,25 +93,21 @@ for i in range(1, header.shape[1]):
 print("new headers: " + str(new_header))
 
 
-#%% remove headers, and convert to relational table
+# remove headers, and convert to relational table, add new headers
 rig_names, phosphate_level = to_relational(phosphate_level)
 phosphate_level.columns = new_header
-# 99 rigs
 
-#%% convert types
+# convert date
 phosphate_level['Sample Date'] = pd.to_datetime(phosphate_level['Sample Date'])
 
-#%% see sample comments one by one. They are usually relevant.
-comments = phosphate_level.loc[np.logical_not(phosphate_level["Sample Comments"].isnull()), :]
-
-#%% remove sample comments
+# remove sample comments
 phosphate_level.drop(columns="Sample Comments", inplace=True)
+
+#%% extract zone names for linking data
 
 ###############################################################
 # extract related post-code
 ###############################################################
-
-#%% extract zone name
 
 pattern1 = re.compile(r".*-\s*(.*?)\s*[Zz]one.*$")
 
@@ -163,7 +164,7 @@ RIG_NAME_to_WOA_mapper = dict()
 for s in rig_names:
     RIG_NAME_to_WOA_mapper[s] = find_zone_name(s)
 
-#%% get WOA names from postcode
+# get WOA names from postcode
 postcode = pd.read_excel("raw-data/SW - Postcodes linked to SW Zonal Structure.xlsb", engine="pyxlsb")
 valid_cols = [col for col in postcode.columns if col[0:7] != "Unnamed"]
 postcode = postcode[valid_cols]
@@ -172,7 +173,7 @@ WOA_Name = WOA_Name[np.logical_not(pd.isnull(WOA_Name))]
 WSZ_Name = postcode['WSZ_Name'].unique()
 WSZ_Name = WSZ_Name[np.logical_not(pd.isnull(WSZ_Name))]
 
-#%% find matching WOA_Name
+# find matching WOA_Name
 def find_match(str1: str) -> list:
     return_list = []
     for woa in WOA_Name:
@@ -187,7 +188,7 @@ for woa in set(RIG_NAME_to_WOA_mapper.values()):
     WOA_mapper[woa] = find_match(woa)
 
 
-#%% find matching WSZ_Name
+# find matching WSZ_Name
 def find_match(str1: str) -> list:
     return_list = []
     for wsz in WSZ_Name:
@@ -201,7 +202,7 @@ WSZ_mapper = dict()
 for wsz in set(RIG_NAME_to_WOA_mapper.values()):
     WSZ_mapper[wsz] = find_match(wsz)
 
-#%% final mapper rig_name -> [post_codes]
+# final mapper rig_name -> [post_codes]
 
 def get_post_code_from_woa(rig_name: str) -> set:
     return_set: set = set()
@@ -235,13 +236,8 @@ for rig_name in rig_names:
 for key, val in REVERSE_POST_CODE_mapper.items():
     print(key + ": " + str(len(val)))
 
-#%% get POST_CODE_mapper
-
-# POST_CODE_mapper maps from post_code to rig_names
-
+# reverse REVERSE_POST_CODE_mapper and get POST_CODE_mapper
 POST_CODE_mapper = dict()
-
-# gather the set of post_codes related
 all_post_codes = set()
 for v in REVERSE_POST_CODE_mapper.values():
     all_post_codes.update(v)
@@ -249,37 +245,43 @@ for v in REVERSE_POST_CODE_mapper.values():
 for p in all_post_codes:
     POST_CODE_mapper[p] = set([k for k, v in REVERSE_POST_CODE_mapper.items() if p in v]);
 
+
+#%% clean extreme values
+
 ###############################################################
-# cleaning extreme values
+# Clean extreme values: remove values greater than 20 times
+# of rolling median (window = 5)
 ###############################################################
 
-#%% remove rows with NA
+# remove rows with NA
 phosphate_level = phosphate_level[~np.logical_or(pd.isnull(phosphate_level["Lead µgPb/l"]),
                                                  pd.isnull(phosphate_level["Phosphorus µgP/l"]))]
 
 
-#%% calculate moving median
-
-# remove values 20 times larger than moving median
-
+# calculate moving median
 phosphate_level.loc[:, 'Lead µgPb/l MVA'] = np.nan
 phosphate_level.loc[:, 'Phosphorus µgP/l MVA'] = np.nan
 
 for rig_name in rig_names:
-    phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Lead µgPb/l MVA'] = phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Lead µgPb/l'].rolling(window=5).median()
-    phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Phosphorus µgP/l MVA'] = phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Phosphorus µgP/l'].rolling(window=5).median()
 
-#%% mark samples for removal
+    rolling = phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Lead µgPb/l'].rolling(window=5).median()
+    phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Lead µgPb/l MVA'] = rolling
+
+    rolling = phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Phosphorus µgP/l'].rolling(window=5).median()
+    phosphate_level.loc[phosphate_level['rig_name'] == rig_name, 'Phosphorus µgP/l MVA'] = rolling
+
+# calculate ratio to moving median
 median_ratio_Lead = phosphate_level.loc[:, 'Lead µgPb/l'] / phosphate_level.loc[:, 'Lead µgPb/l MVA']
 median_ratio_Phosphorus = phosphate_level.loc[:, 'Phosphorus µgP/l'] / phosphate_level.loc[:, 'Phosphorus µgP/l MVA']
 
 Lead_abnormal = median_ratio_Lead > 20
 Phosphorus_abnormal = median_ratio_Phosphorus > 20
 
+# add abnormality flag to dataframe
 phosphate_level.loc[:, "Lead_abnormal"] = Lead_abnormal
 phosphate_level.loc[:, "Phosphorus_abnormal"] = Phosphorus_abnormal
 
-#%% visualize abnormal samples
+# visualize abnormal samples
 Lead_abnormal_ads = phosphate_level.loc[Lead_abnormal, "rig_name"].unique()
 Phosphorus_abnormal_ads = phosphate_level.loc[Phosphorus_abnormal, "rig_name"].unique()
 
@@ -287,15 +289,18 @@ def get_line(rig_name: str, col_name: str):
     return phosphate_level.loc[phosphate_level['rig_name']==rig_name, col_name]
 
 def get_x_points(rig_name: str, col_name: str):
-    return phosphate_level.index[np.logical_and(phosphate_level['rig_name']==rig_name, phosphate_level[col_name.split(' ')[0] + "_abnormal"])]
+    if_abnormal = phosphate_level[col_name.split(' ')[0] + "_abnormal"]
+    return phosphate_level.index[np.logical_and(phosphate_level['rig_name']==rig_name, if_abnormal)]
 
 def get_y_points(rig_name: str, col_name: str):
-    return phosphate_level.loc[np.logical_and(phosphate_level['rig_name']==rig_name, phosphate_level[col_name.split(' ')[0] + "_abnormal"]), col_name]
+    if_abnormal = phosphate_level[col_name.split(' ')[0] + "_abnormal"]
+    return phosphate_level.loc[np.logical_and(phosphate_level['rig_name']==rig_name, if_abnormal), col_name]
 
 for i in range(Phosphorus_abnormal_ads.shape[0]):
     fig, ax = plt.subplots(1, 1)
     ax.plot(get_line(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'))
-    ax.scatter(get_x_points(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'), get_y_points(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'))
+    ax.scatter(get_x_points(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'),
+               get_y_points(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'))
     plt.plot(get_line(Phosphorus_abnormal_ads[i], 'Phosphorus µgP/l'))
     plt.show()
     plt.close()
@@ -309,50 +314,66 @@ for i in range(Lead_abnormal_ads.shape[0]):
     plt.close()
 
 
-#%% samples removed: those with extreme values
+# remove samples: replace extreme values with NA
 phosphate_level.loc[phosphate_level["Lead_abnormal"], 'Lead µgPb/l'] = np.nan
 phosphate_level.loc[phosphate_level["Phosphorus_abnormal"], 'Phosphorus µgP/l'] = np.nan
+
+#%% calculate recent means
 
 ###############################################################
 # calculate recent means for each rig: keep 5 recent non-null records
 ###############################################################
 
-record_number_Hydrogen = phosphate_level.loc[~phosphate_level['Hydrogen ion pH value'].isnull()].sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
+record_number_Hydrogen = phosphate_level.loc[~phosphate_level['Hydrogen ion pH value'].isnull()]\
+    .sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
     .groupby('rig_name').cumcount()
-record_number_Lead = phosphate_level.loc[~phosphate_level['Lead µgPb/l'].isnull()].sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
+record_number_Lead = phosphate_level.loc[~phosphate_level['Lead µgPb/l'].isnull()]\
+    .sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
     .groupby('rig_name').cumcount()
-record_number_Phosphorus = phosphate_level.loc[~phosphate_level['Phosphorus µgP/l'].isnull()].sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
+record_number_Phosphorus = phosphate_level.loc[~phosphate_level['Phosphorus µgP/l'].isnull()]\
+    .sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
     .groupby('rig_name').cumcount()
-record_number_Temperature = phosphate_level.loc[~phosphate_level['Temperature °C'].isnull()].sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
+record_number_Temperature = phosphate_level.loc[~phosphate_level['Temperature °C'].isnull()]\
+    .sort_values(['rig_name', 'Sample Date'], ascending=[True, False])\
     .groupby('rig_name').cumcount()
 
+# take 5 most recent number of records
 TAKE_NUM = 5
 
-phosphate_level_truncated_Hydrogen_mean = phosphate_level.loc[~phosphate_level['Hydrogen ion pH value'].isnull()][['rig_name', 'Hydrogen ion pH value']].loc[record_number_Hydrogen < TAKE_NUM, :]
-phosphate_level_truncated_Lead_mean = phosphate_level.loc[~phosphate_level['Lead µgPb/l'].isnull()][['rig_name', 'Lead µgPb/l']].loc[record_number_Lead < TAKE_NUM, :]
-phosphate_level_truncated_Phosphorus_mean = phosphate_level.loc[~phosphate_level['Phosphorus µgP/l'].isnull()][['rig_name', 'Phosphorus µgP/l']].loc[record_number_Phosphorus < TAKE_NUM, :]
-phosphate_level_truncated_Temperature_mean = phosphate_level.loc[~phosphate_level['Temperature °C'].isnull()][['rig_name', 'Temperature °C']].loc[record_number_Temperature < TAKE_NUM, :]
+truncated_Hydrogen = phosphate_level\
+    .loc[~phosphate_level['Hydrogen ion pH value'].isnull()][['rig_name', 'Hydrogen ion pH value']]\
+        .loc[record_number_Hydrogen < TAKE_NUM, :]
+truncated_Lead = phosphate_level\
+    .loc[~phosphate_level['Lead µgPb/l'].isnull()][['rig_name', 'Lead µgPb/l']]\
+        .loc[record_number_Lead < TAKE_NUM, :]
+truncated_Phosphorus = phosphate_level\
+    .loc[~phosphate_level['Phosphorus µgP/l'].isnull()][['rig_name', 'Phosphorus µgP/l']]\
+        .loc[record_number_Phosphorus < TAKE_NUM, :]
+truncated_Temperature = phosphate_level\
+    .loc[~phosphate_level['Temperature °C'].isnull()][['rig_name', 'Temperature °C']]\
+        .loc[record_number_Temperature < TAKE_NUM, :]
 
 
-phosphate_level_truncated_Hydrogen_mean['Hydrogen ion pH value'] = phosphate_level_truncated_Hydrogen_mean['Hydrogen ion pH value'].astype(np.float)
-phosphate_level_truncated_Lead_mean['Lead µgPb/l'] = phosphate_level_truncated_Lead_mean['Lead µgPb/l'].astype(np.float)
-phosphate_level_truncated_Phosphorus_mean['Phosphorus µgP/l'] = phosphate_level_truncated_Phosphorus_mean['Phosphorus µgP/l'].astype(np.float)
-phosphate_level_truncated_Temperature_mean['Temperature °C'] = phosphate_level_truncated_Temperature_mean['Temperature °C'].astype(np.float)
+truncated_Hydrogen['Hydrogen ion pH value'] = truncated_Hydrogen['Hydrogen ion pH value'].astype(np.float)
+truncated_Lead['Lead µgPb/l'] = truncated_Lead['Lead µgPb/l'].astype(np.float)
+truncated_Phosphorus['Phosphorus µgP/l'] = truncated_Phosphorus['Phosphorus µgP/l'].astype(np.float)
+truncated_Temperature['Temperature °C'] = truncated_Temperature['Temperature °C'].astype(np.float)
 
-phosphate_level_truncated_Hydrogen_mean = phosphate_level_truncated_Hydrogen_mean.groupby('rig_name').mean()
-phosphate_level_truncated_Lead_mean = phosphate_level_truncated_Lead_mean.groupby('rig_name').mean()
-phosphate_level_truncated_Phosphorus_mean = phosphate_level_truncated_Phosphorus_mean.groupby('rig_name').mean()
-phosphate_level_truncated_Temperature_mean = phosphate_level_truncated_Temperature_mean.groupby('rig_name').mean()
+truncated_Hydrogen = truncated_Hydrogen.groupby('rig_name').mean()
+truncated_Lead = truncated_Lead.groupby('rig_name').mean()
+truncated_Phosphorus = truncated_Phosphorus.groupby('rig_name').mean()
+truncated_Temperature = truncated_Temperature.groupby('rig_name').mean()
 
-#%% final data
-rig_data: pd.DataFrame = phosphate_level_truncated_Hydrogen_mean
-rig_data = rig_data.merge(phosphate_level_truncated_Lead_mean, left_index=True, right_index=True)
-rig_data = rig_data.merge(phosphate_level_truncated_Phosphorus_mean, left_index=True, right_index=True)
-rig_data = rig_data.merge(phosphate_level_truncated_Temperature_mean, left_index=True, right_index=True)
+#%% merge and construct final data at post_code level
 
+###############################################################
+# merge and construct final data at post_code level
+###############################################################
 
-
-#%% construct POST_CODE_RIG_DATA
+rig_data: pd.DataFrame = truncated_Hydrogen
+rig_data = rig_data.merge(truncated_Lead, left_index=True, right_index=True)
+rig_data = rig_data.merge(truncated_Phosphorus, left_index=True, right_index=True)
+rig_data = rig_data.merge(truncated_Temperature, left_index=True, right_index=True)
 
 POST_CODE_RIG_DATA = {"post_code":[],
                       "pH value":[],
