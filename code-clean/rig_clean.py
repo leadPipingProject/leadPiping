@@ -376,7 +376,7 @@ for p, v in POST_CODE_mapper.items():
 POST_CODE_RIG_DATA = pd.DataFrame(POST_CODE_RIG_DATA)
 
 #%% export csv
-POST_CODE_RIG_DATA.to_csv(index=False)
+POST_CODE_RIG_DATA.to_csv("out/POST_CODE_RIG_DATA.csv", index=False)
 
 
 # %%
