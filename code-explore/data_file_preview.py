@@ -51,13 +51,13 @@ postcode = postcode[valid_cols]
 postcode.head()
 
 #%% raw-data/SW - Scottish Water Zonal Phosphate Levels.xls
-phosphate_level_N = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="North")
+phosphate_level_N = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="North", header=None)
 phosphate_level_N.head()
-phosphate_level_S = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="South")
+phosphate_level_S = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="South", header=None)
 phosphate_level_S.head()
-phosphate_level_E = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="East")
+phosphate_level_E = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="East", header=None)
 phosphate_level_E.head()
-phosphate_level_W = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="West")
+phosphate_level_W = pd.read_excel("raw-data/SW - Scottish Water Zonal Phosphate Levels.xls", sheet_name="West", header=None)
 phosphate_level_W.head()
 
 #%% Other - Postcode_ household count_ urban class.csv
