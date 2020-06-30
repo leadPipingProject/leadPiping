@@ -79,8 +79,60 @@ replacement_count = pipe_replacement[['replacement_finished', 'Street postcode']
 replacement_finished['success_replacement_count'] = replacement_count['replacement_finished'] * replacement_finished['replacement_finished_ratio']
 replacement_finished.head(20)
 
-# %%
+# %% only need last two column
 replacement_finished = replacement_finished.iloc[:, [1,2]]
 replacement_finished.head()
+
+# %% however, the postcode in the above dataset for Scottish Water are not complete
+# we need to use another dataset called SW - Postcodes linked to SW Zonal Structure
+# to find the complete postcode and merge them together
+postcode = pd.read_excel("raw-data/SW - Postcodes linked to SW Zonal Structure.xlsb", engine="pyxlsb")
+valid_cols = [col for col in postcode.columns if col[0:7] != "Unnamed"]
+postcode = postcode[valid_cols]
+postcode = postcode.iloc[:,0:2]
+postcode.columns = ['Street postcode','District postcode']
+postcode.head()
+
+# %%  delete the nan value sample points and standardize the postcode format
+postcode = postcode.dropna()
+postcode['Street postcode'] = postcode['Street postcode'].str.replace(' ', '')
+postcode['Street postcode'] = postcode['Street postcode'].str.upper()
+
+# %% merging
+replacement_finished = pd.merge(postcode, replacement_finished, left_on = 'Street postcode', right_on = 'Street postcode', how = 'left')
+
+
+# %%  view information
+replacement_finished.info()
+# <class 'pandas.core.frame.DataFrame'>
+# Int64Index: 173319 entries, 0 to 173318
+# Data columns (total 4 columns):
+#  #   Column                     Non-Null Count   Dtype  
+# ---  ------                     --------------   -----  
+#  0   Street postcode            173319 non-null  object 
+#  1   District Postcode          173319 non-null  object 
+#  2   any_replacement            7984 non-null    object 
+#  3   success_replacement_count  7984 non-null    float64
+# dtypes: float64(1), object(3)
+replacement_finished.head(20)
+# %%  For any_replacement replace the NAN value with False
+# For success_replacement_count replace the NAN value with 0
+# and we only use Street postcode any_replacement and success_replacement_count
+replacement_finished['success_replacement_count'].fillna(0, inplace = True)
+replacement_finished['any_replacement'].fillna(False, inplace = True)
+replacement_finished.set_index('Street postcode', inplace = True)
+replacement_finished = replacement_finished.iloc[:,1:3]
+replacement_finished.head(20)
+
+# %%  plot a histogram
+max_replacement_finished = replacement_finished['>=1970'].max()
+min_replacement_finished = replacement_finished['>=1970'].min()
+bins = np.linspace(min_replacement_finished, max_replacement_finished, 20)
+plt.hist(replacement_finished['>=1970'], bins)
+plt.xlabel('ratio of properties built since 1970 according to each postcode')
+plt.ylabel('Number of occurences')
+plt.title('Frequency distribution of ratio of properties built since 1970')
+plt.show()
+
 
 # %%
