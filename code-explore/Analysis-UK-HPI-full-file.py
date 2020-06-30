@@ -32,6 +32,8 @@ average_price.head(20)
 # %% read in the file Other - Postcode_ household count_ urban class
 # to connect the street postecode from it with CouncilArea2018Code here.
 household_count = pd.read_csv("raw-data/Other - Postcode_ household count_ urban class.csv")
+household_count['Street postcode'] = household_count['Street postcode'].str.replace(' ', '')
+household_count['Street postcode'] = household_count['Street postcode'].str.upper()
 household_count.head(20)
 
 # %% merge these two datasets by column CouncilArea2018Code
@@ -58,4 +60,21 @@ plt.xlabel('Number of house price in a range')
 plt.ylabel('Number of occurences')
 plt.title('Frequency distribution of house price in Scottish Water Region')
 plt.show()
+# %% delete non useful variables
+del UK_HPI
+del average_price
+del bins
+del household_count
+del latest_year
+del max_price_of_all
+del min_price_of_all
+del mean_price_of_all
+del median_price_of_all
+del over_one_year
+del std_of_all
+
+
+# %%
+new_frame.head(20)
+
 # %%

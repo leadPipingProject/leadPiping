@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 #%% read Other - SAA_PropertyAgeData file and change the Postcode to 
 property_age_data = pd.read_csv("raw-data/Other - SAA_PropertyAgeData.csv", engine="c", encoding="Latin-1")
 property_age_data['Postcode'] = property_age_data['Postcode'].str.replace(' ', '')
+property_age_data['Postcode'] = property_age_data['Postcode'].str.upper()
 property_age_data.head(20)
 
 # %% check the data type of the dataset
@@ -37,5 +38,14 @@ plt.title('Frequency distribution of ratio of properties built since 1970')
 plt.show()
 
 
+
+# %% delete non useful variables
+del bins
+del max_ratio_of_after_1970
+del min_ratio_of_after_1970
+del property_age_data
+
+# %%
+ratio_of_after_1970.head(20)
 
 # %%
