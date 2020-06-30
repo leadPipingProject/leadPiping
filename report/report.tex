@@ -91,7 +91,7 @@ me on this work or any process related to this work.
 \clearpage
 
 \section*{Executive summary}
-\label{sec.intro}
+\label{sec.summary}
 Lead is a harmful environment pollution.
 This project aim at developing a dataset for pinpointing
 the lead in Scotland water system.
@@ -107,9 +107,9 @@ pipe replacement information related to each postcode.
 
 \section{Introduction}
 \label{sec.intro}
-Lead is one of the most important environmental pollutants and has been shown in several studies to be a trigger for health problems (Marzie Boskabady, et al., 2018). This is because lead poisoning can occur when lead enters the body. In most cases, small amounts of lead can accumulate over time and cause health problems. The health effects of lead poisoning cannot be ignored. Exposure to lead can be harmful, especially to unborn babies and young children who absorb more lead as their bones develop. Signs and symptoms of young children can include irritability and fatigue, loss of appetite and weight loss, abdominal pain, vomiting, and constipation. In addition, exposure to lead from drinking contaminated water can cause illness in adults. High blood pressure, abdominal pain, constipation, joint and muscle pain, numbness or tingling in the limbs, and headache are suspicious symptoms in adults (Scottish Water).
+Lead is one of the most important environmental pollutants and has been shown in several studies to be a trigger for health problems \cite{ei}. This is because lead poisoning can occur when lead enters the body. In most cases, small amounts of lead can accumulate over time and cause health problems. The health effects of lead poisoning cannot be ignored. Exposure to lead can be harmful, especially to unborn babies and young children who absorb more lead as their bones develop. Signs and symptoms of young children can include irritability and fatigue, loss of appetite and weight loss, abdominal pain, vomiting, and constipation. In addition, exposure to lead from drinking contaminated water can cause illness in adults. High blood pressure, abdominal pain, constipation, joint and muscle pain, numbness or tingling in the limbs, and headache are suspicious symptoms in adults \cite[Scottish Water]{sw}.
 
-In modern life, the risk of human lead poisoning is very low because lead is now generally not used in paint, petrol or food containers. As a result, most people have very little exposure to lead. However, one of the main potential risks may be drinking tap water. People need to be especially careful if the property has lead pipes, water tanks, or pipes with lead fittings, as this can lead to a polluted water supply. And this problem is taken seriously by Scotland government. The government stipulated that all drinking water should meet the tighter standard for lead (10$\mu$g/l) that came into force in December 2013 (Scotland Government).  Although most modern water pipes are made of lead-free materials, however, houses built before 1970 may have water pipe which connects the property to the water main in the street that contains lead. Hence, it is the strategic goal of Scottish Water company to replace this part of water supply pipeline and ensure the water quality of customers. And the goal of the company is to increase the reliability, resilience and sustainability of its services to realize lead free water supply. In order to achieve this goal, Scottish Water company is striving to achieve two points for their customers: 1. At least one tap in the property which is supplied with water which has not been in contact with lead pipes. 2. The level of lead in the water is no higher than 3 $\mu$g/l.
+In modern life, the risk of human lead poisoning is very low because lead is now generally not used in paint, petrol or food containers. As a result, most people have very little exposure to lead. However, one of the main potential risks may be drinking tap water. People need to be especially careful if the property has lead pipes, water tanks, or pipes with lead fittings, as this can lead to a polluted water supply. And this problem is taken seriously by Scotland government. The government stipulated that all drinking water should meet the tighter standard for lead (10$\mu$g/l) that came into force in December 2013 (Scottish \citeauthor{government}).  Although most modern water pipes are made of lead-free materials, however, houses built before 1970 may have water pipe which connects the property to the water main in the street that contains lead. Hence, it is the strategic goal of Scottish Water company to replace this part of water supply pipeline and ensure the water quality of customers. And the goal of the company is to increase the reliability, resilience and sustainability of its services to realize lead free water supply. In order to achieve this goal, Scottish Water company is striving to achieve two points for their customers: 1. At least one tap in the property which is supplied with water which has not been in contact with lead pipes. 2. The level of lead in the water is no higher than 3 $\mu$g/l.
 
 \clearpage
 
@@ -190,12 +190,6 @@ Note that we use median instead of average value to judge whether a data point c
     \caption{Example 2 of extreme values}
     \end{figure}
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.5\textwidth]{p3.png}
-    \caption{Missing values always occur at the latest date of a rig}
-    \end{figure}
-
 Below are examples showing what kind of sample points (in blue) we have deleted from the dataset.
 
 \begin{figure}[!ht]
@@ -239,20 +233,12 @@ Here we find the classes of this feature for the complete status are mainly two 
     \includegraphics[width=0.5\textwidth]{p11.png}
     \end{figure}
 
+\clearpage
+
 % the entries have to be in the file literature.bib
 \bibliographystyle{agsm}
 \bibliography{report.bib}
 \clearpage
 
-\section{Reference}
-
-\hspace{2em} Boskabady, M., Marefati, N., Farkhondeh, T., Shakeri, F., Farshbaf, A, Hossein, M.B., (2018). The effect of environmental lead exposure on human health and the contribution of inflammatory mechanisms, a review. Environment International, IF (7.577), p.1.
-
-Scotland Government, (2013). Drinking Water Quality for Scotland. Retrieved from: https://dwqr.scot/public-water-supply/drinking-water-quality-faqs/lead/
-
-Scottish Water, (2020). Lead poisoning. Retrieved from: https://www.nhsinform.scot/illnesses-and-conditions/infections-and-poisoning/lead-poisoning
-
-
-Some other stuff.
 
 \end{document}
