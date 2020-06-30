@@ -237,10 +237,100 @@ For `SW - All Lead WQ Samples (2010-18)', we first observed that the dataset con
 In order to obtain an up-to-date estimation of the lead concentration for each area, we wish to use records that are as new as possible. The original sampling has different time periods for different postcodes. For some postcodes, the latest sampling takes place in 2011 or 2012. So it is quite inevitable that our final data would involve records that are quite old (i.e., in year 2011-2012), while some involve newer sampling (e.g., in 2018).
 
 We did not insist on restricting a strict time range for sampling, although that would be ideal for statistical modelling. For example, we didn't require that all sampling must take place in year 2017. The reason is that such restrictions would require us to discard too many samples from our table.
-As for each of the records, not all of them have valid sampling result. Some of the results are missing values. The column `Result Status Description' explains why these sampling results are missing. Some of these sampling are cancelled. The reason we need to discuss this is that we directly discarded those missing samplings as we believe that cancelling does not have direct relation with lead contamination distribution. We did give one restriction over sampling, that is--for each street postcode, we only keep samples from the last year until the latest sampling. So, for each street postcode, when aggregating the sampling result, we keep at most one year's data. The aim of this is to ensure that the aggregated average lead concentration is as up to date as possible.
+As for each of the records, not all of them have valid sampling result. Some of the results are missing values. The column `Result Status Description' explains why these sampling results are missing. 1241 of these sampling are cancelled. The reason we need to discuss this is that we directly discarded those missing samplings as we believe that cancelling does not have direct relation with lead contamination distribution. We did give one restriction over sampling, that is--for each street postcode, we only keep samples from the last year until the latest sampling. So, for each street postcode, when aggregating the sampling result, we keep at most one year's data. The aim of this is to ensure that the aggregated average lead concentration is as up to date as possible.
 
-For the all Lead WQ sample dataset, we have given a consideration about its statistical robustness as well. We wished to discard postcode data that contain too few sample. However, the majority (over 90\%) of the all the postcodes contained in the dataset corresponds to only a single sample. If we requires that postcodes must contain more than one testing, we would be discarding data related 90\% of all postcodes. Therefore, we consider it better to keep all the sample averages.
+For the all Lead WQ sample dataset, we have given a consideration about its statistical robustness as well. We wished to discard postcode data that contain too few sample. However, the majority (16069 samples) of the all the postcodes contained in the dataset corresponds to only a single sample. If we requires that postcodes must contain more than one testing, we would be discarding data related (16069 samples) of all postcodes. Therefore, we consider it better to keep all the sample averages.
 
+The communication pipe dataset `SW - Comm pipe data' is an interesting data set. We have known from an employee of Scottish Water that communication pipes are closely related to lead contamination. We have selected some of the most relevant columns from the dataset including pipe material type, pipe material type at AR10 time, the age of the sampled property, the certainty of the identification of the pipe (as some pipe can be very old and eroded, the identification may not be so accurate), and as the length of the pipe. One interesting varible is `MAIN\_DISTANCE', which estimates the distance of the property from the main pipe. This distance is approximately the distance that the water flows in the communication pipe before it reaches resident's home. It is reasonable conjecture that for especially lead pipes, the longer `MAIN\_DISTANCE' is, the more likely that the water is contaminated.
+
+The detailed operations we did on this dataset are the following. For the identification confidence, as it is a categorical variable but has indeed an ordinal meaning, we convert it directly to numerical values: according to the following table, or we just pick the larger integer in the categorical value.
+\begin{center}
+    \begin{tabular}{lllc}
+        \hline
+        categorical confidence  & number of samples & numerical value\\
+        \hline
+        96-100\%  & 6402   &   100\\
+        \hline
+        76-95\%   & 4229   &   95\\
+        \hline
+        51-75\%   &  715   &   75\\
+        \hline
+        95-100\%  &  474   &   100\\
+        \hline
+        75-95\%   &  338   &   95\\
+        \hline
+        50-75\%   &   81   &   75\\
+        \hline
+        0-50\%    &   24   &   50\\
+        \hline
+        50-67\%   &    2   &   67\\
+        \hline
+    \end{tabular}
+\end{center}
+We did some further reduction on the data. An important information contained in the dataset is the type of the pipe. The origianl column records various types of pipes. For instance: copper, poly, iron, lead, pvc, etc. Since we are going to aggregate the data to postcode level, for sure we can calculate the proportion of pipes for each material, but this would carry a lot of information that is not needed. As our goal is to understand lead contamination, it makes no difference whether a pipe is made of iron or made of PVC. In short, we ultimately only kept the proportion of examined communication pipes that are lead for each postcode. The same is also true for pipe type at ar10.
+
+\subsection{Processed data}
+In the final processed data we pull together all the data that we have mentioned above. We left join each of the datasets we mentioned earlier to a base data set which contains all the street postcode in the area. We used the `Trim postcode' column of `SW - Postcodes linked to SW Zonal Structure' as the base dataset. The resulting dataset contains the following colunmns,and we offer a simple data dictionary below:
+\begin{center}
+    \begin{tabular}{ll}
+        \hline
+        post\_code                                 &
+        street post code\\
+        \hline
+        rig - PH value                             &
+        mean ph value from rig monitor\\
+        \hline
+        rig - Lead µgPb/l                          &
+        mean Lead concentration from rig monitor\\
+        \hline
+        rig - Phosphorus µgP/l                     &
+        mean Phosphorus concentration from rig monitor\\
+        \hline
+        rig - Temperature °C                       &
+        mean Temperature from rig monitor\\
+        \hline
+        sample - lead µgPb/l                       &
+        lead concentration from water quality sample\\
+        \hline
+        comm pipe - main distance                   &
+        average distance from main pip\\
+        \hline
+        comm pipe - commission year                 &
+        average commision year of the communication pipe\\
+        \hline
+        comm pipe - identification confidence       &
+        average confidence of pipe identification\\
+        \hline
+        comm pipe - leakage                         &
+        the ratio of communication pipe discovered leakage\\
+        \hline
+        comm pipe - property pre 1970               &
+        ratio of property before 1970\\
+        \hline
+        comm pipe - lead pipe ratio                  &
+        current ratio of property before 1970\\
+        \hline
+        comm pipe - ar10 lead pipe ratio             &
+        ar10 ratio of property before 1970\\
+        \hline
+        HPI - Average House Price                  &
+        recent average house price based on HPI\\
+        \hline
+        HPI - Estimated post 1970 ratio            &
+        estimated ratio of properties built before 1970\\
+        \hline
+        replacement - any\_replacement              &
+        if any replacement recorded between 2004-2018\\
+        \hline
+        replacement - success\_replacement\_count    &
+        number of communication-pipe replacements 2004-2018\\
+        \hline
+    \end{tabular}
+\end{center}
+As is seen in the data dictionary. The naming of the columns first indicates the source of this column before a dash, and appends its detailed name after the dash.
+
+\section{Conclusion}
+In this project, we have explored data related to Scottish water lead contamination from several different sources. We have recorded the details of data processings done in order to produce the resulted output data. We have also many whys regarding the decisions we made during the data mergin processes. The resulting data set concentrates the most relevant information related to lead pollution for Scottish Water.
 
 \clearpage
 
