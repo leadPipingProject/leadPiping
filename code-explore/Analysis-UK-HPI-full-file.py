@@ -32,6 +32,8 @@ average_price.head(20)
 # %% read in the file Other - Postcode_ household count_ urban class
 # to connect the street postecode from it with CouncilArea2018Code here.
 household_count = pd.read_csv("raw-data/Other - Postcode_ household count_ urban class.csv")
+household_count['Street postcode'] = household_count['Street postcode'].str.replace(' ', '')
+household_count['Street postcode'] = household_count['Street postcode'].str.upper()
 household_count.head(20)
 
 # %% merge these two datasets by column CouncilArea2018Code
