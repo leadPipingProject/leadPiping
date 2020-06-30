@@ -60,4 +60,21 @@ plt.xlabel('Number of house price in a range')
 plt.ylabel('Number of occurences')
 plt.title('Frequency distribution of house price in Scottish Water Region')
 plt.show()
+# %% delete non useful variables
+del UK_HPI
+del average_price
+del bins
+del household_count
+del latest_year
+del max_price_of_all
+del min_price_of_all
+del mean_price_of_all
+del median_price_of_all
+del over_one_year
+del std_of_all
+
+
+# %%
+new_frame.head(20)
+
 # %%

@@ -125,14 +125,44 @@ replacement_finished = replacement_finished.iloc[:,1:3]
 replacement_finished.head(20)
 
 # %%  plot a histogram
-max_replacement_finished = replacement_finished['>=1970'].max()
-min_replacement_finished = replacement_finished['>=1970'].min()
-bins = np.linspace(min_replacement_finished, max_replacement_finished, 20)
-plt.hist(replacement_finished['>=1970'], bins)
-plt.xlabel('ratio of properties built since 1970 according to each postcode')
+replacement_finished['success_replacement_count'].value_counts()
+# 0.0     165767
+# 1.0       5724
+# 2.0       1288
+# 3.0        352
+# 4.0        100
+# 5.0         55
+# 6.0         19
+# 7.0          4
+# 8.0          4
+# 9.0          3
+# 15.0         1
+# 14.0         1
+# 10.0         1
+# Name: success_replacement_count, dtype: int64
+
+# %%  plot a histogram
+max_replacement_finished = replacement_finished['success_replacement_count'].max()
+min_replacement_finished = replacement_finished['success_replacement_count'].min()
+bins = np.linspace(min_replacement_finished, max_replacement_finished, 15)
+plt.hist(replacement_finished['success_replacement_count'], bins)
+plt.xlabel('number counts of success replacement of the pipes for Scottich Water')
 plt.ylabel('Number of occurences')
-plt.title('Frequency distribution of ratio of properties built since 1970')
+plt.title('Frequency distribution of number counts of success replacement')
 plt.show()
 
+
+# %% delete non useful variables
+del bins
+del max_replacement_finished
+del min_replacement_finished
+del pipe_replacement
+del postcode
+del replacement_count
+del valid_cols
+
+
+# %%
+replacement_finished.head(20)
 
 # %%

@@ -39,4 +39,13 @@ plt.show()
 
 
 
+# %% delete non useful variables
+del bins
+del max_ratio_of_after_1970
+del min_ratio_of_after_1970
+del property_age_data
+
+# %%
+ratio_of_after_1970.head(20)
+
 # %%
