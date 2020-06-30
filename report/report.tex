@@ -188,7 +188,7 @@ Below are examples showing what kind of sample points (in blue) we have deleted 
     \includegraphics[width=0.3\textwidth]{p5.png}\\
     \includegraphics[width=0.3\textwidth]{p6.png}
     \includegraphics[width=0.3\textwidth]{p7.png}
-    \caption{Missing values marked by out algorithm}
+    \caption{Extreme values marked by our algorithm}
     \end{figure}
 
 Now the result of doing the above things is one WOA matches one sensor. Then, we need to search the tables for WOA and WSZ at the same time by extracting the keywords contains the original WOA name is the dataset ‘SW - Scottish Water Zonal Phosphate Levels.xls’. we then associate the searched keywords with the postcode. Hence, such a sensor corresponds to a lot of Postcodes. The existing values collected for each sensor's associated physical coefficients are the average of the last five non-null values. We then do a reverse search to find which sensors correspond to which Postcodes and calculate the average of the physical parameters of all sensors based on each Postcode. These include: ‘Hydrogen ion’, ‘Lead concentration’, ‘Phosphorus’ and ‘Temperature’.
