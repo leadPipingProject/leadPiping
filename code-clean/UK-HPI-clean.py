@@ -37,11 +37,11 @@ household_count['Street postcode'] = household_count['Street postcode'].str.uppe
 household_count.head(20)
 
 # %% merge these two datasets by column CouncilArea2018Code
-new_frame = pd.merge(household_count, average_price, left_on = 'CouncilArea2018Code', right_on = 'CouncilArea2018Code', how = 'left')
-new_frame = new_frame[['Street postcode', 'AveragePrice']]
-new_frame = new_frame[['AveragePrice', 'Street postcode']].groupby('Street postcode').mean()
-new_frame.columns=['Average House Price for Street Postcode']
-new_frame
+property_price = pd.merge(household_count, average_price, left_on = 'CouncilArea2018Code', right_on = 'CouncilArea2018Code', how = 'left')
+property_price = property_price[['Street postcode', 'AveragePrice']]
+property_price = property_price[['AveragePrice', 'Street postcode']].groupby('Street postcode').mean()
+property_price.columns=['Average House Price for Street Postcode']
+property_price
 
 # %% exploratory analysis
 mean_price_of_all = average_price['AveragePrice'].mean()
@@ -75,6 +75,6 @@ del std_of_all
 
 
 # %%
-new_frame.head(20)
+property_price.head(20)
 
 # %%
