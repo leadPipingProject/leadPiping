@@ -233,6 +233,15 @@ Here we find the classes of this feature for the complete status are mainly two 
     \includegraphics[width=0.5\textwidth]{p11.png}
     \end{figure}
 
+For `SW - All Lead WQ Samples (2010-18)', we first observed that the dataset contains water quality sampling at property level from Scotland. Our goal is to use this dataset to generate an estimation of the water quality (i.e., lead contamination) for each street postcode in Scotland (as long as there is sample for the particular streetcode). So, the most important column in this dataset is clearly `Result Numeric Entry', which records lead concentration in water. The concentration unit column records the unit used for each records. We have checked and assured that for all samples, the unit used are the same (i.e., $\mu$g/l).
+In order to obtain an up-to-date estimation of the lead concentration for each area, we wish to use records that are as new as possible. The original sampling has different time periods for different postcodes. For some postcodes, the latest sampling takes place in 2011 or 2012. So it is quite inevitable that our final data would involve records that are quite old (i.e., in year 2011-2012), while some involve newer sampling (e.g., in 2018).
+
+We did not insist on restricting a strict time range for sampling, although that would be ideal for statistical modelling. For example, we didn't require that all sampling must take place in year 2017. The reason is that such restrictions would require us to discard too many samples from our table.
+As for each of the records, not all of them have valid sampling result. Some of the results are missing values. The column `Result Status Description' explains why these sampling results are missing. Some of these sampling are cancelled. The reason we need to discuss this is that we directly discarded those missing samplings as we believe that cancelling does not have direct relation with lead contamination distribution. We did give one restriction over sampling, that is--for each street postcode, we only keep samples from the last year until the latest sampling. So, for each street postcode, when aggregating the sampling result, we keep at most one year's data. The aim of this is to ensure that the aggregated average lead concentration is as up to date as possible.
+
+For the all Lead WQ sample dataset, we have given a consideration about its statistical robustness as well. We wished to discard postcode data that contain too few sample. However, the majority (over 90\%) of the all the postcodes contained in the dataset corresponds to only a single sample. If we requires that postcodes must contain more than one testing, we would be discarding data related 90\% of all postcodes. Therefore, we consider it better to keep all the sample averages.
+
+
 \clearpage
 
 % the entries have to be in the file literature.bib
