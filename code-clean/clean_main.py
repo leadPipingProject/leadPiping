@@ -24,18 +24,6 @@ print("Running: code-clean/UK_HPI_clean.py")
 exec(open("code-clean/UK_HPI_clean.py").read())
 
 
-#%%
-POST_CODE_RIG_DATA.head()
-#%%
-all_lead_sample.head()
-#%%
-comm_pipe.head()
-#%%
-property_price.head()
-#%%
-ratio_of_after_1970.head()
-#%%
-replacement_finished.head()
 
 #%%
 postcode = pd.read_excel("raw-data/SW - Postcodes linked to SW Zonal Structure.xlsb", engine="pyxlsb")
@@ -76,7 +64,7 @@ output.columns = ['post_code',
 
 
 # %%
-output.to_csv('processed-data/procseed_data.csv', float_format="%.5f")
+output.to_csv('processed-data/processed_data.csv', float_format="%.5f", index=False)
 
 
 # %%
