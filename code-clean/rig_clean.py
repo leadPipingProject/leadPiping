@@ -164,6 +164,15 @@ RIG_NAME_to_WOA_mapper = dict()
 for s in rig_names:
     RIG_NAME_to_WOA_mapper[s] = find_zone_name(s)
 
+
+del pattern1
+del pattern2
+del pattern3
+del trailing_pattern1
+del trailing_pattern2
+del trailing_pattern3
+del trailing_pattern4
+
 # get WOA names from postcode
 postcode = pd.read_excel("raw-data/SW - Postcodes linked to SW Zonal Structure.xlsb", engine="pyxlsb")
 valid_cols = [col for col in postcode.columns if col[0:7] != "Unnamed"]
@@ -232,9 +241,14 @@ for rig_name in rig_names:
     this_set.update(get_post_code_from_woa(rig_name))
     this_set.update(get_post_code_from_wsz(rig_name))
 
+del postcode
+
 # number of post codes related to each rig
 for key, val in REVERSE_POST_CODE_mapper.items():
     print(key + ": " + str(len(val)))
+
+
+
 
 # reverse REVERSE_POST_CODE_mapper and get POST_CODE_mapper
 POST_CODE_mapper = dict()
@@ -245,6 +259,10 @@ for v in REVERSE_POST_CODE_mapper.values():
 for p in all_post_codes:
     POST_CODE_mapper[p] = set([k for k, v in REVERSE_POST_CODE_mapper.items() if p in v]);
 
+del RIG_NAME_to_WOA_mapper
+del WOA_mapper
+del WSZ_mapper
+del REVERSE_POST_CODE_mapper
 
 #%% clean extreme values
 
@@ -313,6 +331,10 @@ for i in range(Lead_abnormal_ads.shape[0]):
     plt.show()
     plt.close()
 
+del Lead_abnormal_ads
+del Phosphorus_abnormal_ads
+del Lead_abnormal
+del Phosphorus_abnormal
 
 # remove samples: replace extreme values with NA
 phosphate_level.loc[phosphate_level["Lead_abnormal"], 'Lead µgPb/l'] = np.nan
@@ -375,6 +397,16 @@ rig_data = rig_data.merge(truncated_Lead, left_index=True, right_index=True)
 rig_data = rig_data.merge(truncated_Phosphorus, left_index=True, right_index=True)
 rig_data = rig_data.merge(truncated_Temperature, left_index=True, right_index=True)
 
+del phosphate_level
+del record_number_Hydrogen
+del record_number_Lead
+del record_number_Phosphorus
+del record_number_Temperature
+del truncated_Hydrogen
+del truncated_Lead
+del truncated_Phosphorus
+del truncated_Temperature
+
 POST_CODE_RIG_DATA = {"post_code":[],
                       "pH value":[],
                       "Lead µgPb/l":[],
@@ -396,8 +428,34 @@ for p, v in POST_CODE_mapper.items():
 
 POST_CODE_RIG_DATA = pd.DataFrame(POST_CODE_RIG_DATA)
 
-#%% export csv
-POST_CODE_RIG_DATA.to_csv("out/POST_CODE_RIG_DATA.csv", index=False)
+#%% clean environment
+del POST_CODE_mapper
+del TAKE_NUM
+del WOA_Name
+del WSZ_Name
+del all_post_codes
+del ax
+del data
+del fig
+del header
+del i
+del key
+del median_ratio_Lead
+del median_ratio_Phosphorus
+del new_header
+del p
+del progress
+del rig_data
+del rig_name
+del rig_names
+del rolling
+del s
+del this_set
+del v
+del val
+del valid_cols
+del woa
+del wsz
 
 
 # %%

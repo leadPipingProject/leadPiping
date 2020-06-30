@@ -27,10 +27,10 @@ lead_sample = lead_sample[valid_cols]
 lead_sample.head()
 
 #%% SW - Comm pipe data.xls
-common_pipe = pd.read_excel("raw-data/SW - Comm pipe data.xls", dtype={"AR10_PROPERTYID":str})
-valid_cols = [col for col in common_pipe.columns if col[0:7] != "Unnamed"]
-common_pipe = common_pipe[valid_cols]
-common_pipe.head()
+comm_pipe = pd.read_excel("raw-data/SW - Comm pipe data.xls", dtype={"AR10_PROPERTYID":str})
+valid_cols = [col for col in comm_pipe.columns if col[0:7] != "Unnamed"]
+comm_pipe = comm_pipe[valid_cols]
+comm_pipe.head()
 
 #%% SW - Lead Comm Pipe Replacements (2004-2018).csv
 pipe_replacement = pd.read_csv("raw-data/SW - Lead Comm Pipe Replacements (2004-2018).csv")
