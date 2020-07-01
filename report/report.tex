@@ -170,13 +170,13 @@ Note that we use median instead of average value to judge whether a data point c
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p1.png}
+    \includegraphics[width=0.8\textwidth]{p1.png}
     \caption{Example 1 of extreme values}
     \end{figure}
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p2.png}
+    \includegraphics[width=0.8\textwidth]{p2.png}
     \caption{Example 2 of extreme values}
     \end{figure}
 
@@ -184,10 +184,10 @@ Below are examples showing what kind of sample points (in blue) we have deleted 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.3\textwidth]{p4.png}
-    \includegraphics[width=0.3\textwidth]{p5.png}\\
-    \includegraphics[width=0.3\textwidth]{p6.png}
-    \includegraphics[width=0.3\textwidth]{p7.png}
+    \includegraphics[width=0.45\textwidth]{p4.png}
+    \includegraphics[width=0.45\textwidth]{p5.png}\\
+    \includegraphics[width=0.45\textwidth]{p6.png}
+    \includegraphics[width=0.45\textwidth]{p7.png}
     \caption{Extreme values marked by our algorithm}
     \end{figure}
 
@@ -197,7 +197,7 @@ For the dataset generated from ‘Other - UK-HPI-full-file-2019-03.csv’, after
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p8.png}
+    \includegraphics[width=0.6\textwidth]{p8.pdf}
     \end{figure}
 
 However, we are still not finished. The final goal of this dataset is to calculate the average price base on the distinguishing identifier in the level of the street postcode. Hence, we need to read in another dataset which can be used to connect the two datasets with the same feature. After checking at the features dictionary, we find both of the dataset ‘Other - Postcode\_ household count\_ urban class.csv’ and ‘Other - UK-HPI-full-file-2019-03.csv’ contains the feature ‘CouncilArea2018Code’ and the ‘Other - Postcode\_ household count\_ urban class.csv’ contains the feature ‘Street postcode’. Hence, we read in the ‘Other - Postcode\_ household count\_ urban class.csv’ contains the feature ‘Street postcode’ dataset and left merge those two datasets with ‘CouncilArea2018Code’ by left joint. Then we get a table with feature ‘Street postcode’ numbers multiple mapping with the feature ‘AveragePrice’ which we select from the original calculated dataset. Hence, we can calculate the average house price for each street postcode. Here is the end of this dataset manipulation.
@@ -206,21 +206,21 @@ For the dataset generated from ‘Other - SAA\_PropertyAgeData.csv’, our goal 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p9.png}
+    \includegraphics[width=0.6\textwidth]{p9.pdf}
     \end{figure}
 
 For the dataset generated from ‘SW - Lead Comm Pipe Replacements (2004-2018).csv’, our goal is to find the counts of how many times the pipe of each street postcode has been successfully replaced. Also, within the procedure, we could find whether the street has or has not replaced its pipes. To do this, we first read in the dataset an find the information about each feature. Next, we should choose features we need to build a new dataset and make sure all postcodes are capitalized and no blanks in it. Here, we should use the features 'WO Completed Status', 'WO Create Date', and 'Street postcode'. To make sure all the replacement of pipes is valid. We should check the replacement date here to ensure the date of replacement is after 1970. To do this, we need to convert the feature ‘WO Create Date’ to date type, so we can calculate with date type easily. After checking, we find all the samples with dates are after 1970. Then, we check the class types of feature ‘WO Completed Status’.
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p10.png}
+    \includegraphics[width=0.6\textwidth]{p10.png}
     \end{figure}
 
 Here we find the classes of this feature for the complete status are mainly two types: ‘All Complete’ and ‘All Complete with Comments’. So, we need to generate a column that records the street postcode with whether its pipe has been finished replacement. we name the new feature as ‘replacement\_finished’. When doing this, we find the elements in ‘WO Completed Status’ have lots of meaningless blanks and we need to delete them before Boolean slicing. And now we can calculate the ratio of the replacement finished, find whether the street has or has not replaced its pipes, and count the number of finished replacements for each street postcode. however, the postcode in the above dataset for Scottish Water is not complete, since this dataset only contains the information of street postcode that may have replaced the pipes. We need to use another dataset called ‘SW - Postcodes linked to SW Zonal Structure’ to find the complete postcode and merge them together. When read in the new dataset we also need to delete the nan value sample points and standardize the postcode format. After let merge, we get a dataset and we need to fill in the NAN values. For the feature ‘any\_replacement’, we replace the NAN value with False. For the feature ‘success\_replacement\_count’, we replace the NAN value with 0. In the below table, we could find that most of the street has not replaced its pipes.
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{p11.png}
+    \includegraphics[width=0.6\textwidth]{p11.png}
     \end{figure}
 
 For `SW - All Lead WQ Samples (2010-18)', we first observed that the dataset contains water quality sampling at property level from Scotland. Our goal is to use this dataset to generate an estimation of the water quality (i.e., lead contamination) for each street postcode in Scotland (as long as there is sample for the particular streetcode). So, the most important column in this dataset is clearly `Result Numeric Entry', which records lead concentration in water. The concentration unit column records the unit used for each records. We have checked and assured that for all samples, the unit used are the same (i.e., $\mu$g/l).
