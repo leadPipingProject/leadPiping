@@ -35,6 +35,8 @@ plt.hist(ratio_of_after_1970['>=1970'], bins)
 plt.xlabel('ratio of properties built since 1970 according to each postcode')
 plt.ylabel('Number of occurences')
 plt.title('Frequency distribution of ratio of properties built since 1970')
+plt.subplots_adjust(left=0.15, right=0.9, bottom = 0.15, top = 0.9, wspace=0.2, hspace = 0.2)
+plt.savefig(r'out/property_age_clean.pdf')
 plt.show()
 
 

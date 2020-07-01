@@ -59,6 +59,8 @@ plt.hist(average_price['AveragePrice'], bins)
 plt.xlabel('Number of house price in a range')
 plt.ylabel('Number of occurences')
 plt.title('Frequency distribution of house price in Scottish Water Region')
+plt.subplots_adjust(left=0.15, right=0.9, bottom = 0.15, top = 0.9, wspace=0.2, hspace = 0.2)
+plt.savefig(r'out/UK_HPI_clean.pdf')
 plt.show()
 # %% delete non useful variables
 del UK_HPI

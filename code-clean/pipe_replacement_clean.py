@@ -149,6 +149,8 @@ plt.hist(replacement_finished['success_replacement_count'], bins)
 plt.xlabel('number counts of success replacement of the pipes for Scottich Water')
 plt.ylabel('Number of occurences')
 plt.title('Frequency distribution of number counts of success replacement')
+plt.subplots_adjust(left=0.15, right=0.9, bottom = 0.15, top = 0.9, wspace=0.2, hspace = 0.2)
+plt.savefig(r'out/pipe_replacement.pdf')
 plt.show()
 
 
