@@ -2,9 +2,9 @@
 
 ## How to reproduce the data
 
-### Step 1: supply the raw data into raw-data folder
+### Step 1: decompress the `raw-data.7z` file
 
-*Create a folder called `raw-data`, and put the following data files into the folder as they are*.
+*Decompressing the file will create a folder called `raw-data` into the repository root, which contains the following files:*
 
 - `raw-data/SW - All Lead WQ Samples (2010-18).xls`
 - `raw-data/SW - Comm pipe data.xls`
@@ -15,9 +15,6 @@
 - `Other - Postcode_ household count_ urban class.csv`
 - `Other - SAA_PropertyAgeData.csv`
 - `Other - UK-HPI-full-file-2019-03.csv`
-
-The file names must be **exactly** the same as listed above.
-(Data files are not supplied with the repository because of file size limit imposed by github.)
 
 ### Step 2: set working directory (cd) to repository folder
 
