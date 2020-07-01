@@ -5,6 +5,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{natbib}
+\usepackage{hyperref}
 \usepackage[singlespacing]{setspace}
 
 \geometry{a4paper,left=3cm,right=2.0cm, top=2cm, bottom=2.0cm}
@@ -329,5 +330,46 @@ In this project, we have explored data related to Scottish water lead contaminat
 \bibliography{report.bib}
 \clearpage
 
+\appendix
+\section*{Appendices}
+\addcontentsline{toc}{section}{Appendices}
+
+\section{Source Code Link}
+\label{app:one}
+
+The git repository of this project is \href{https://github.com/leadPipingProject/leadPiping}{https://github.com/leadPipingProject/leadPiping}.
+Please use the \textit{master} branch of the repository.
+The python scripts for data cleaning is in folder \href{https://github.com/leadPipingProject/leadPiping/tree/master/code-clean}{code-clean}. It contains the following scripts:
+
+\begin{enumerate}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/clean_main.py}{clean\_main.py}: \textbf{this script runs all the scripts below in the right order and merge the results from these scripts into \href{https://github.com/leadPipingProject/leadPiping/blob/master/processed-data/processed_data.csv}{\textit{processed\_data.csv}}. For those who wish to reproduce the data, please run this script.}
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/clean_main.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\clean\_main.py}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/UK_HPI_clean.py}{UK\_HPI\_clean.py}: this script cleans housing price.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/UK_HPI_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\UK\_HPI\_clean.py}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/comm_pipe_clean.py}{comm\_pipe\_clean.py}: this script cleans communication piping data.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/comm_pipe_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\comm\_pipe\_clean.py}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/rig_clean.py}{rig\_clean.py}: this script cleans RIG monitor data.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/rig_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\rig\_clean.py}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/all_lead_clean.py}{all\_lead\_clean.py}: this script cleans the water quality sampling (2010-2018) data.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/all_lead_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\all\_lead\_clean.py}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/pipe_replacement_clean.py}{pipe\_replacement\_clean.py}: this script cleans the communication pipe replacement data.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/pipe_replacement_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\pipe\_replacement\_clean.py/}
+    \item \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/property_age_clean.py}{property\_age\_clean.py}: this script cleans the property age data.
+    \\
+    \textbf{URL: }
+    \href{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/property_age_clean.py}{https://github.com/leadPipingProject/leadPiping/blob/master/code-clean/\\property\_age\_clean.py}
+\end{enumerate}
 
 \end{document}
