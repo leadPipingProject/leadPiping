@@ -28,7 +28,9 @@ Set the working directory of the notebooks/scripts to the
 The easiest way is to do this is to use linux/unix `cd` command:
 `cd {path to this repository folder}` before running python.
 
-### Step 3: run `python code-clean/clean_main.py`
+### Step 3: run `python code-clean/clean_main.py or the Jupyter Noteboob` base on your habit
 
-Only need to run `python code-clean/clean_main.py`.
+After finishing previous steps,you can run the code.
+One way is to run `python code-clean/clean_main.py` in terminal directly.
 This script `clean_main.py` will automatically execute the other scripts.
+The other way is to run the Jupyter Notebook in the folder you downloaded directly.
